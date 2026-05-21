@@ -318,7 +318,7 @@ const getPrices = async function upsellGetPrices(allPrices) {
 
   return selectedProduct;
 };
-const prices = [{"name":"1x EXTRA Vi-Shift Glasses","id":232,"quantity":1,"price":19.99,"shippable":false,"fullPrice":19.98,"finalPrice":19.98,"productName":"1x EXTRA Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"1x Flexible Glasses","id":224,"quantity":1,"price":29.99,"shippable":false,"fullPrice":29.99,"finalPrice":29.99,"productName":"1x Flexible Glasses","discountAmount":0,"discountPercentage":0},{"name":"1x USB 3.0 Quick Charger","id":59,"quantity":1,"price":0,"shippable":false,"fullPrice":0,"finalPrice":0,"productName":"1x USB 3.0 Quick Charger","discountAmount":0,"discountPercentage":0},{"name":"2x Vi-Shift Glasses","id":225,"quantity":1,"price":53.98,"shippable":false,"fullPrice":53.98,"finalPrice":53.98,"productName":"2x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"3 Year Extended Warranty","id":230,"quantity":1,"price":10,"shippable":false,"fullPrice":10,"finalPrice":10,"productName":"3 Year Extended Warranty","discountAmount":0,"discountPercentage":0},{"name":"3x Vi-Shift Glasses","id":226,"quantity":1,"price":71.97,"shippable":false,"fullPrice":71.97,"finalPrice":71.97,"productName":"3x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"4x Vi-Shift Glasses","id":227,"quantity":1,"price":83.96,"shippable":false,"fullPrice":83.96,"finalPrice":83.96,"productName":"4x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"5x Vi-Shift Glasses","id":228,"quantity":1,"price":89.95,"shippable":false,"fullPrice":89.95,"finalPrice":89.95,"productName":"5x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"Journey Package Protection","id":231,"quantity":1,"price":3.5,"shippable":false,"fullPrice":3.5,"finalPrice":3.5,"productName":"Journey Package Protection","discountAmount":0,"discountPercentage":0},{"name":"Vi-Shift Glasses - Expedited Shipping","id":233,"quantity":1,"price":9.99,"shippable":false,"fullPrice":9.99,"finalPrice":9.99,"productName":"Vi-Shift Glasses - Expedited Shipping","discountAmount":0,"discountPercentage":0},{"name":"Vi-Shift Protective Case Upgrade","id":229,"quantity":1,"price":9.95,"shippable":false,"fullPrice":9.95,"finalPrice":9.95,"productName":"Vi-Shift Protective Case Upgrade","discountAmount":0,"discountPercentage":0},{"name":"VIP Customer Benefits","id":34,"quantity":1,"price":9.95,"shippable":false,"fullPrice":9.95,"finalPrice":9.95,"productName":"VIP Customer Benefits","discountAmount":0,"discountPercentage":0}];
+const prices = [{"name":"1x EXTRA Vi-Shift Glasses","id":232,"quantity":1,"price":19.99,"shippable":false,"fullPrice":19.99,"finalPrice":19.99,"productName":"1x EXTRA Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"1x Flexible Glasses","id":224,"quantity":1,"price":29.99,"shippable":false,"fullPrice":29.99,"finalPrice":29.99,"productName":"1x Flexible Glasses","discountAmount":0,"discountPercentage":0},{"name":"1x USB 3.0 Quick Charger","id":59,"quantity":1,"price":0,"shippable":false,"fullPrice":0,"finalPrice":0,"productName":"1x USB 3.0 Quick Charger","discountAmount":0,"discountPercentage":0},{"name":"2x Vi-Shift Glasses","id":225,"quantity":1,"price":53.98,"shippable":false,"fullPrice":53.98,"finalPrice":53.98,"productName":"2x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"3 Year Extended Warranty","id":230,"quantity":1,"price":10,"shippable":false,"fullPrice":10,"finalPrice":10,"productName":"3 Year Extended Warranty","discountAmount":0,"discountPercentage":0},{"name":"3x Vi-Shift Glasses","id":226,"quantity":1,"price":71.97,"shippable":false,"fullPrice":71.97,"finalPrice":71.97,"productName":"3x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"4x Vi-Shift Glasses","id":227,"quantity":1,"price":83.96,"shippable":false,"fullPrice":83.96,"finalPrice":83.96,"productName":"4x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"5x Vi-Shift Glasses","id":228,"quantity":1,"price":89.95,"shippable":false,"fullPrice":89.95,"finalPrice":89.95,"productName":"5x Vi-Shift Glasses","discountAmount":0,"discountPercentage":0},{"name":"Journey Package Protection","id":231,"quantity":1,"price":3.5,"shippable":false,"fullPrice":3.5,"finalPrice":3.5,"productName":"Journey Package Protection","discountAmount":0,"discountPercentage":0},{"name":"Vi-Shift Glasses - Expedited Shipping","id":233,"quantity":1,"price":9.99,"shippable":false,"fullPrice":9.99,"finalPrice":9.99,"productName":"Vi-Shift Glasses - Expedited Shipping","discountAmount":0,"discountPercentage":0},{"name":"Vi-Shift Protective Case Upgrade","id":229,"quantity":1,"price":9.95,"shippable":false,"fullPrice":9.95,"finalPrice":9.95,"productName":"Vi-Shift Protective Case Upgrade","discountAmount":0,"discountPercentage":0},{"name":"VIP Customer Benefits","id":34,"quantity":1,"price":9.95,"shippable":false,"fullPrice":9.95,"finalPrice":9.95,"productName":"VIP Customer Benefits","discountAmount":0,"discountPercentage":0}];
 const shippables = [{"id":223,"name":"Flexible Glasses"},{"id":36,"name":"USB 3.0 Quick Charger"}];
 
 function removeObjectUndefinedProperties(obj) {
@@ -567,7 +567,7 @@ function showErrorAndRedirect(msg, redirectTarget = "checkout") {
 const runDeclineFlow = async ({ isAutoSkip = false } = {}) => {
   if (!isAutoSkip) {
    MVMT.track("CTA_CLICK", {
-    page: "upsell",
+    page: "upsell2",
     page_type: "Upsell",
     page_url: window.location.href
   });
@@ -702,7 +702,7 @@ async function returnKlarna() {
       sessionStorage.setItem("cms_oid", resultOrderId);
       sessionStorage.setItem("orderids", JSON.stringify([resultOrderId]));
       MVMT.track("ORDER_SUCCESS", {
-        page: "upsell",
+        page: "upsell2",
         page_type: "Upsell",
         page_url: window.location.href,
         order_data: orderData,
@@ -753,7 +753,7 @@ async function returnKlarna() {
         i18n.errors.klarnaCompletionFailed;
       if (window.MVMT) {
         MVMT.track("ORDER_ERROR", {
-          page: "upsell",
+          page: "upsell2",
           page_type: "Upsell",
           page_url: window.location.href,
           order_data: orderData,
@@ -778,7 +778,7 @@ async function returnKlarna() {
     }
     if (window.MVMT) {
       MVMT.track("ORDER_ERROR", {
-        page: "upsell",
+        page: "upsell2",
         page_type: "Upsell",
         page_url: window.location.href,
         order_data: orderData,
@@ -926,14 +926,14 @@ const processKlarnaUpsell = async () => {
       });
 
     MVMT.track("UPSELL_SUBMITTED", {
-      page: "upsell",
+      page: "upsell2",
       page_type: "Upsell",
       page_url: window.location.href,
       order_id: lastOrderId,
       offers
     });
     MVMT.track("CTA_CLICK", {
-      page: "upsell",
+      page: "upsell2",
       page_type: "Upsell",
       page_url: window.location.href
     });
@@ -950,7 +950,7 @@ const processKlarnaUpsell = async () => {
         body: JSON.stringify({
           offers: offers.map((o) => JSON.stringify(o)),
           order_id: lastOrderId,
-          pageId: "7_O16RLg3LzPKxSam6XDBUKOrwCM_0wJmqr8ZQB9ThLX7fKvPG9QdUQ_e4cKHp5-"
+          pageId: "m6da6xlzMKGIZoFnaKdkeDQ69g5aB3ifeZgQqDO05RmIEXHg_gRlcU0addKMFwgI"
         })
       }
     );
@@ -1030,7 +1030,7 @@ const processUpsell = async () => {
   }
   try {
     const orderData = JSON.parse(sessionStorage.getItem("orderData"));
-    orderData.pageId = "7_O16RLg3LzPKxSam6XDBUKOrwCM_0wJmqr8ZQB9ThLX7fKvPG9QdUQ_e4cKHp5-";
+    orderData.pageId = "m6da6xlzMKGIZoFnaKdkeDQ69g5aB3ifeZgQqDO05RmIEXHg_gRlcU0addKMFwgI";
     const lastOrderId = sessionStorage.getItem("cms_oid");
     const stripePayment = JSON.parse(sessionStorage.getItem("stripePayment"));
     const isStripeTestOrder = stripePayment && !stripePayment.isLive;
@@ -1097,7 +1097,7 @@ const processUpsell = async () => {
 
     if (isTest) console.log("Sending upsell to VRIO", orderData);
     MVMT.track("UPSELL_SUBMITTED", {
-      page: "upsell",
+      page: "upsell2",
       page_type: "Upsell",
       page_url: window.location.href,
       order_data: orderData,
@@ -1136,7 +1136,7 @@ const processUpsell = async () => {
       }
       if (window.MVMT) {
         MVMT.track("UPSELL_ERROR", {
-          page: "upsell",
+          page: "upsell2",
           page_type: "Upsell",
           page_url: window.location.href,
           order_data: orderData
@@ -1160,7 +1160,7 @@ const processUpsell = async () => {
         showToast(msg);
       }
       MVMT.track("UPSELL_ERROR", {
-        page: "upsell",
+        page: "upsell2",
         page_type: "Upsell",
         page_url: window.location.href,
         order_data: orderData,
@@ -1169,13 +1169,13 @@ const processUpsell = async () => {
     }
 
     MVMT.track("UPSELL_SUCCESS", {
-      page: "upsell",
+      page: "upsell2",
       page_type: "Upsell",
       page_url: window.location.href,
       order_data: orderData,
     });
     MVMT.track("CTA_CLICK", {
-      page: "upsell",
+      page: "upsell2",
       page_type: "Upsell",
       page_url: window.location.href,
     });
@@ -1315,7 +1315,7 @@ if (typeof validateAndSendToKlaviyo === "function") {
       message: "Klaviyo lifecycle: page ready",
       runId: "initial",
       hypothesisId: "KlaviyoLifecycle",
-      data: { pageName: "upsell", pageType: "Upsell" },
+      data: { pageName: "upsell2", pageType: "Upsell" },
     };
     if (klaviyoDebugEnabled && typeof console !== "undefined" && console.log) {
       console.log("[Klaviyo lifecycle] page_ready " + JSON.stringify(pageReadyPayload.data));
