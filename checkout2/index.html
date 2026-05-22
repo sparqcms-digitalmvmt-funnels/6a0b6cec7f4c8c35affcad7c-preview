@@ -1,6 +1,33 @@
 <!DOCTYPE html><html lang="en"><head><base href="/6a0b6cec7f4c8c35affcad7c-preview/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content=""><title>checkout2</title><link rel="icon" href="favicon.ico" type="image/x-icon"><script>
 sessionStorage.setItem("test", true);
 
+
+(function trackEverflowPageConversion() {
+  var s = document.createElement("script");
+  s.src = "https://www.mxj5trk.com/scripts/main.js";
+  s.onload = function () {
+    EF.click({
+      offer_id: EF.urlParameter("oid") || EF.urlParameter("offer_id"),
+      affiliate_id: EF.urlParameter("affid") || EF.urlParameter("aff_id"),
+      sub1: EF.urlParameter("sub1") || EF.urlParameter("aff_sub"),
+      sub2: EF.urlParameter("sub2") || EF.urlParameter("aff_sub2"),
+      sub3: EF.urlParameter("sub3") || EF.urlParameter("aff_sub3"),
+      sub4: EF.urlParameter("sub4") || EF.urlParameter("aff_sub4"),
+      sub5: EF.urlParameter("sub5") || EF.urlParameter("aff_sub5"),
+      uid: EF.urlParameter("uid") || EF.urlParameter("url_id"),
+      source_id: EF.urlParameter("source_id"),
+      transaction_id: EF.urlParameter("_ef_transaction_id"),
+    }).then(function () {
+      EF.conversion({
+        aid: 503,
+        adv_event_id: 1,
+      });
+    });
+  };
+  document.head.appendChild(s);
+})();
+
+
 const ALLOWED_AFFILIATE_IDS = [];
 
 let nextPageSlug = null;
@@ -77,7 +104,7 @@ if (localStorage.getItem('sK_r')) {
 const route = async () => {
   if (localStorage.getItem('sK_r')) return JSON.parse(localStorage.getItem('sK_r'));
   const sessionId = MVMT.getSessionId() || localStorage.getItem("mvmt_session_id") || "";
-  const url = 'https://func-ab-test-events-dev-001.azurewebsites.net/api/checkRoute?id=6a0b6cec7f4c8c35affcad7c&v=177940492016655&sessionId='+sessionId;
+  const url = 'https://func-ab-test-events-dev-001.azurewebsites.net/api/checkRoute?id=6a0b6cec7f4c8c35affcad7c&v=177948669881472&sessionId='+sessionId;
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error('Network response was not ok');

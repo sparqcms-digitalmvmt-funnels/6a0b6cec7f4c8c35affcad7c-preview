@@ -1,6 +1,34 @@
 <!DOCTYPE html><html lang="en"><head><base href="/6a0b6cec7f4c8c35affcad7c-preview/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content=""><title>thankyou</title><link rel="icon" href="favicon.ico" type="image/x-icon"><script>
 sessionStorage.setItem("test", true);
 
+
+var s = document.createElement("script");
+s.src = "https://www.mxj5trk.com/scripts/main.js";
+s.onload = function () {
+  (function orderTakenFireEverflowConversion() {
+    const shouldNotFirePurchaseConversion = !sessionStorage.getItem("cms_oid") || sessionStorage.getItem("everflow_purchase_conversion_fired");
+    if (shouldNotFirePurchaseConversion) return;
+    const urlParamsEF = new URLSearchParams(window.location.search);
+    const rawAffId =
+      urlParamsEF.get("AFFID") ||
+      urlParamsEF.get("affid") ||
+      sessionStorage.getItem("AFFID") ||
+      sessionStorage.getItem("affid");
+    const affiliateId = parseInt(rawAffId, 10) || 1095;
+    if (typeof EF !== "undefined") {
+      EF.conversion({ aid: 503, adv_event_id: 5 });
+      EF.conversion({
+        offer_id: EF.urlParameter("oid") || EF.urlParameter("offer_id"),
+      });
+      sessionStorage.setItem("everflow_purchase_conversion_fired", "true");
+    } else {
+      console.error("[Everflow] SDK not loaded");
+    }
+  })();
+};
+document.head.appendChild(s);
+
+
 const ALLOWED_AFFILIATE_IDS = [];
 
 let nextPageSlug = null;
@@ -77,7 +105,7 @@ if (localStorage.getItem('sK_r')) {
 const route = async () => {
   if (localStorage.getItem('sK_r')) return JSON.parse(localStorage.getItem('sK_r'));
   const sessionId = MVMT.getSessionId() || localStorage.getItem("mvmt_session_id") || "";
-  const url = 'https://func-ab-test-events-dev-001.azurewebsites.net/api/checkRoute?id=6a0b6cec7f4c8c35affcad7c&v=177940492016655&sessionId='+sessionId;
+  const url = 'https://func-ab-test-events-dev-001.azurewebsites.net/api/checkRoute?id=6a0b6cec7f4c8c35affcad7c&v=177948669881472&sessionId='+sessionId;
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error('Network response was not ok');

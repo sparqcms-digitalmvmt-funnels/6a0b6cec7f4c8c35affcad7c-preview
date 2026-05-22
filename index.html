@@ -9,7 +9,7 @@ const route = async () => {
   if (localStorage.getItem('sK_r')) return JSON.parse(localStorage.getItem('sK_r'));
   try {
     const sessionId = MVMT.getSessionId() || localStorage.getItem("mvmt_session_id") || "";
-    const url = 'https://func-ab-test-events-dev-001.azurewebsites.net/api/checkRoute?id=6a0b6cec7f4c8c35affcad7c&v=177940492016655&sessionId='+sessionId;
+    const url = 'https://func-ab-test-events-dev-001.azurewebsites.net/api/checkRoute?id=6a0b6cec7f4c8c35affcad7c&v=177948669881472&sessionId='+sessionId;
     const response = await fetch(url);
     if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
@@ -37,7 +37,7 @@ const normalizePath = (rawPath) => {
 
 const nextPage = async () => {
   const cp = normalizePath(window.location.pathname || '/');
-  if (cp === '' || cp === '6a0b6cec7f4c8c35affcad7c-preview') { const urlParams = new URLSearchParams(window.location.search); const q = urlParams.toString(); return 'checkout' + (q ? '?' + q : ''); } 
+  if (cp === '' || cp === '6a0b6cec7f4c8c35affcad7c-preview') { const urlParams = new URLSearchParams(window.location.search); const q = urlParams.toString(); return 'lp1' + (q ? '?' + q : ''); } 
   const cr = await route();
   if(!cr) throw new Error('Route not found');
   let nr = cr.find((r) => r.page === cp);

@@ -1,32 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><base href="/6a0b6cec7f4c8c35affcad7c-preview/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content=""><title>upsell</title><link rel="icon" href="favicon.ico" type="image/x-icon"><script>
+<!DOCTYPE html><html lang="en"><head><base href="/6a0b6cec7f4c8c35affcad7c-preview/"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content=""><title>downsell</title><link rel="icon" href="favicon.ico" type="image/x-icon"><script>
 sessionStorage.setItem("test", true);
 
-
-var s = document.createElement("script");
-s.src = "https://www.mxj5trk.com/scripts/main.js";
-s.onload = function () {
-  (function orderTakenFireEverflowConversion() {
-    const shouldNotFirePurchaseConversion = !sessionStorage.getItem("cms_oid") || sessionStorage.getItem("everflow_purchase_conversion_fired");
-    if (shouldNotFirePurchaseConversion) return;
-    const urlParamsEF = new URLSearchParams(window.location.search);
-    const rawAffId =
-      urlParamsEF.get("AFFID") ||
-      urlParamsEF.get("affid") ||
-      sessionStorage.getItem("AFFID") ||
-      sessionStorage.getItem("affid");
-    const affiliateId = parseInt(rawAffId, 10) || 1095;
-    if (typeof EF !== "undefined") {
-      EF.conversion({ aid: 503, adv_event_id: 5 });
-      EF.conversion({
-        offer_id: EF.urlParameter("oid") || EF.urlParameter("offer_id"),
-      });
-      sessionStorage.setItem("everflow_purchase_conversion_fired", "true");
-    } else {
-      console.error("[Everflow] SDK not loaded");
-    }
-  })();
-};
-document.head.appendChild(s);
 
 
 const ALLOWED_AFFILIATE_IDS = [];
@@ -90,8 +64,8 @@ if (localStorage.getItem('sK_r')) {
         button.addEventListener("click", (e) => {
           e.preventDefault();
           MVMT.track("CTA_CLICK", {
-            page: "upsell",
-            page_type: "Upsell",
+            page: "downsell",
+            page_type: "Downsell",
             page_url: window.location.href,
           });
           window.location.href = nextPageSlug;
@@ -171,8 +145,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const elementTop = event.clientY;
 
     MVMT.track("PAGE_CLICK", {
-      page: "upsell",
-      page_type: "Upsell",
+      page: "downsell",
+      page_type: "Downsell",
       page_url: window.location.href,
       element_classes: elementClasses,
       element_id: elementId,
@@ -214,8 +188,8 @@ document.addEventListener("DOMContentLoaded", async() => {
       button.addEventListener("click", (e) => {
         e.preventDefault();
         MVMT.track("CTA_CLICK", {
-          page: "upsell",
-          page_type: "Upsell",
+          page: "downsell",
+          page_type: "Downsell",
           page_url: window.location.href,
         });
         window.location.href = nextPageSlug;
@@ -245,8 +219,8 @@ document.addEventListener("DOMContentLoaded", async() => {
   
   if (componentIds.length > 0) {
       MVMT.track("PAGE_VIEW_COMPONENTS", {
-      page: "upsell",
-      page_type: "Upsell",
+      page: "downsell",
+      page_type: "Downsell",
       page_url: window.location.href,
       component_ids: componentIds
     });
@@ -262,7 +236,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     'offer': 'Vi-Shift, Vi-Shift',
     'customer_id':sessionStorage.getItem("customerId") || undefined,
     'page':{
-      'type':'Upsell',
+      'type':'Downsell',
       'isReload':performance.getEntriesByType("navigation")[0].type === "reload",
       'isExclude':false
     },
@@ -273,17 +247,17 @@ document.addEventListener("DOMContentLoaded", async() => {
     }
   });
 </script>
-  <link rel="stylesheet" href="styles/upsell.css" /><style>@layer imported{.red {
+  <link rel="stylesheet" href="styles/downsell.css" /><style>@layer imported{.red {
   color: blue;
   font-size: 24px
 }}</style><style>@layer imported{.strike {
   text-decoration: line-through;
   text-decoration-color: #444444;
-}}</style></head><body><div><div><header class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-i9vfpo cgbp4ft c-b1p5ui c-crbsvi ctduf03 c-evftdq c-aojzn2 c-4aoy6u c-k1hfkf"><link rel="preload" as="image" href="assets/rival-dark-logo.png"/><img src="assets/rival-dark-logo.png" alt="Image header" class="c1qvieb ciytyod c-d7jzl0 c-4au6wl ceuu77c" id="1" loading="eager"/><link rel="preload" as="image" href="assets/steps.png"/><img src="assets/steps.png" alt="Image header" class="c3qwk4m cix23zl c-d7jzl0 c-468i9h" id="4" loading="eager"/></header><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-b1u9qq" data-zRv82="zRv82"><span class="c7hj9q8 c-bu2rzl cybkfeg ccjwpg7 c-n92bdn c-l08hdi">HURRY—Don't Miss Your BONUS OFFER!</span><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera ch5lc3u cwtaoij c-mb61ox c-aks0up cnvd1uz c7e7cj7 c-6s4sku c1l0cnl c9dzewq" data_products=""><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-6q9rwv cfvwpbu cs4gvzf c-aop3ja c-b1tmr7 c-i9vfpo c-evftdq cxoenjx c-468i9h"><link rel="preload" as="image" href="assets/warning.png"/><img src="assets/warning.png" class="c-i7kkdb cix3sj2 c-d7jzl0" loading="eager"/><span class="c-n92bdn cybjsex cwz7wfk">Offer will expire when the window is closed.</span></div><span class="c-lsq09 cybkfeg c-n92bdn cgevsei c-yegw0y c-lhdxov">Get an Extra Pair of Rival</span><div class="c-lc9846 c-oaxxat czb3o6e cevei02 c7l9c6s c-a4oera c-crbsvi ctduf03 c-aojzn2 c-b1p5ui c-lsq09 c-jok80d cnkzvdv co7bnzc"><span class="c-n92bdn c-yegw0y c-jok80d"><span style="font-size: 31.8px; font-weight: 700;">Footwears for&nbsp;</span></span><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-xw6n1r cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn c-xw6n1r" data_holder="product_final_price"><span style="font-size: 31.8px; font-weight: 700;">24.99</span></span></div><span class="c-n92bdn c-yegw0y"><span style="font-size: 31.8px; font-weight: 700;">&nbsp;Today Only!</span></span></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c-5pdfmv c-a4oera c-iwza5u c-mb44qc cmpatwk ce5vqi6 c-aop3ja c-crbsvi ctduf03 c-v0br6m c-b1u9qq c8qfco" data_products="" data-product-card-1="product_id"><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c-5pdfmv c-42cdjk c-i9vfpo c-aolwln c-b1r2t3"><span class="c-n92bdn cey0ojg c-mdsko cybkfeg">EXCLUSIVE VIP OFFER</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-i9vfpo ciusx6p c-crbsvi ctduf03"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><span class="c-n92bdn cxg9itr" data_holder="product_name"><div style="text-align: left;"><font face="Barlow Semi Condensed, sans-serif"><span style="font-size: 15px;"><b>1x Rival Footwear</b></span></font></div></span><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera cybkfeg c-r09u5q c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr" data_holder="product_full_price">59 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-crbsvi c-aop3ja c-b1u9qq"><span class="c-n92bdn cybkfeg cxg9itr" data_holder="product_name">1x VIP Customer Perks</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-ldkgy6 cun148d c-aop3ja c-b1u9qq"><img src="assets/Group.svg" class="c-i8o5k1 cjmgjye c-d7jzl0" id="4" loading="lazy"/><span class="c-n92bdn cxg9itr">Free Monthly Products</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-r09u5q cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr">49 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-ldkgy6 c-aop3ja c-b1u9qq"><img src="assets/Group.svg" class="c-i8o5k1 cjmgjye c-d7jzl0" id="4" loading="lazy"/><span class="c-n92bdn cxg9itr">50% Off Select Products</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-r09u5q cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr">19.99 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-ldkgy6 c-aop3ja c-b1u9qq"><img src="assets/Group.svg" class="c-i8o5k1 cjmgjye c-d7jzl0" id="4" loading="lazy"/><span class="c-n92bdn cxg9itr">Free Expedited Shipping</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-r09u5q cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr">9.99 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-aojzn2 c-b1p5ui cun148d ctduf03 c-i9vfpo c2u2kz6 c-jp5aks"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn" data_holder="product_final_price">24.99</span></div><span class="c-n92bdn">&nbsp;monthly. No Obligation. Cancel Anytime</span></div></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-hlnvma c-v0br6m c-iwza5u cwtaoij cnvd1uz ccjwpg7 c8qfco"><span class="c-n92bdn c2v526o cybkfeg">Only 8 EXTRA Bonus shoes left!</span><span class="c-n92bdn cybkfeg c-mb8mk" data-timer="">09:59</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-evftdq c-6q9rwv cnvgvs5 cck0jdd c49eq3z c-6s5fkd c1kzpo2 c8qfco"><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-6do06y c5d39l4 c8n7oc c-6s5fkd"><span class="c-n92bdn ckd1ou4 cybjsex">Retail Price:</span><div class="strike c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-lqt1o ckd1ou4 cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn c-lqt1o cybkfeg ckd1ou4 c-4aoy6u c-tqu0hl" data_holder="product_full_price">139.98</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c8n7oc c1kzpo2"><span class="c-n92bdn ckd1ou4 cybjsex">Offer Price:</span><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-lqt1o c-ykmh5z cybkfeg c-crbsvi c-aop3ja c-b1u9qq"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn c-lqt1o cybkfeg c-ykmh5z" data_holder="product_final_price">24.99</span></div></div></div><button class="c-lc9846 c-oaxxat cevei02 c-rri4mx cpf2v2a c-jaytv5 c-sc1q4l c-z1rj74 ccdkvsh cgt2htg cwzv3pd cey0ojg cmpdduo ch8wzy4 c-i9vfpo c-evftdq c7l9c6s c-4au6wl c-z3x91n c-mb6oog c8q8of" data-submit-button="" data-product-id="232"><span class="c-m9yni cey0ojg c-v947c4 cybkfeg">Complete My Order</span></button></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera cnxk88f ccm3vtn"><span class="c-n92bdn c-yq8lw3 c-mdsko cybj5fe chlmbyd cyvf0zv" data-decline-button="">No thanks, I don´t want this great offer</span></div></div></div></div><script src="https://stdigitalmvmtdev001.blob.core.windows.net/libs/mvmt-latest.develop.js.min.js"></script><script src="scripts/upsell.js"></script><script src="scripts/pageBuilder/page/upsell/upsell.js"></script>
+}}</style></head><body><div><div><header class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-i9vfpo cgbp4ft c-b1p5ui c-crbsvi ctduf03 c-evftdq c-aojzn2 c-d8btpc c-4aoy6u c-k1hfkf"><link rel="preload" as="image" href="assets/rival-dark-logo.png"/><img src="assets/rival-dark-logo.png" alt="Image header" class="c1qvieb ciytyod c-d7jzl0 c-4au6wl ceuu77c" id="1" loading="eager"/><link rel="preload" as="image" href="assets/steps.png"/><img src="assets/steps.png" alt="Image header" class="c3qwk4m cix23zl c-d7jzl0 c-468i9h" id="4" loading="eager"/></header><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-b1u9qq c-d8btpc" data-zRv82="zRv82"><span class="c7hj9q8 c-bu2rzl cybkfeg ccjwpg7 c-n92bdn c-l08hdi">HURRY—Don't Miss Your BONUS OFFER!</span><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera ch5lc3u cwtaoij c-mb61ox c-aks0up cnvd1uz c7e7cj7 c-6s4sku c1l0cnl c9dzewq" data_products=""><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-6q9rwv cfvwpbu cs4gvzf c-aop3ja ccjwpg7 c-i9vfpo c-evftdq cxoenjx c-468i9h"><link rel="preload" as="image" href="assets/warning.png"/><img src="assets/warning.png" class="c-i7kkdb cix3sj2 c-d7jzl0" loading="eager"/><span class="c-n92bdn cybjsex cwz7wfk">Offer will expire when the window is closed.</span></div><span class="c-lsq09 cybkfeg c-n92bdn cgevsei c-yegw0y c-lhdxov">Get an Extra Pair of Rival</span><div class="c-lc9846 c-oaxxat czb3o6e cevei02 c7l9c6s c-a4oera c-crbsvi ctduf03 c-aojzn2 c-b1p5ui c-lsq09 c-jok80d cnkzvdv co7bnzc"><span class="c-n92bdn c-yegw0y c-jok80d"><span style="font-size: 31.8px; font-weight: 700;">Footwears for&nbsp;</span></span><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-xw6n1r cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn c-xw6n1r" data_holder="product_final_price"><span style="font-size: 31.8px; font-weight: 700;">24.99</span></span></div><span class="c-n92bdn c-yegw0y"><span style="font-size: 31.8px; font-weight: 700;">&nbsp;Today Only!</span></span></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c-5pdfmv c-a4oera c-iwza5u c-mb44qc cmpatwk ce5vqi6 c-aop3ja c-crbsvi ctduf03 c-v0br6m c-b1u9qq c8qfco" data_products="" data-product-card-1="product_id"><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c-5pdfmv c-42cdjk c-i9vfpo c-aolwln c-b1r2t3"><span class="c-n92bdn cey0ojg c-mdsko cybkfeg">EXCLUSIVE VIP OFFER</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-46t6vk c-i9vfpo c-crbsvi ctduf03"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq c-kfumxj cgfha7j"><span class="c-n92bdn cxg9itr" data_holder="product_name"><div style="text-align: left;"><font face="Barlow Semi Condensed, sans-serif"><span style="font-size: 15px;"><b>1x Rival Footwear</b></span></font></div></span><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera cybkfeg c-r09u5q c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr" data_holder="product_full_price">59 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-crbsvi c-aop3ja c-b1u9qq"><span class="c-n92bdn cybkfeg cxg9itr" data_holder="product_name">1x VIP Customer Perks</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-ldkgy6 cun148d c-aop3ja c-b1u9qq"><img src="assets/Group.svg" class="c-i8o5k1 cjmgjye c-d7jzl0" id="4" loading="lazy"/><span class="c-n92bdn cxg9itr">Free Monthly Products</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-r09u5q cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr">49 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-ldkgy6 c-aop3ja c-b1u9qq"><img src="assets/Group.svg" class="c-i8o5k1 cjmgjye c-d7jzl0" id="4" loading="lazy"/><span class="c-n92bdn cxg9itr">50% Off Select Products</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-r09u5q cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr">19.99 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-hou3zo c-aop3ja c-b1u9qq"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-ldkgy6 c-aop3ja c-b1u9qq"><img src="assets/Group.svg" class="c-i8o5k1 cjmgjye c-d7jzl0" id="4" loading="lazy"/><span class="c-n92bdn cxg9itr">Free Expedited Shipping</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-r09u5q cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn cybkfeg c-r09u5q cxg9itr">9.99 value</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-aojzn2 c-b1p5ui cun148d ctduf03 c-i9vfpo c2u2kz6 c-jp5aks"><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn" data_holder="product_final_price">24.99</span></div><span class="c-n92bdn">&nbsp;monthly. No Obligation. Cancel Anytime</span></div></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-hlnvma c-v0br6m c-iwza5u cwtaoij cnvd1uz ccjwpg7 c8qfco"><span class="c-n92bdn c2v526o cybkfeg">Only 8 EXTRA Bonus shoes left!</span><span class="c-n92bdn cybkfeg c-mb8mk" data-timer="">09:59</span></div><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-i9vfpo c-evftdq c-6q9rwv cnvgvs5 cck0jdd c49eq3z c-6s5fkd c1kzpo2 c8qfco"><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c-6do06y c5d39l4 c8n7oc c-6s5fkd"><span class="c-n92bdn ckd1ou4 cybjsex">Retail Price:</span><div class="strike c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-lqt1o ckd1ou4 cybkfeg c-aop3ja c-b1u9qq c-crbsvi ctduf03"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn c-lqt1o cybkfeg ckd1ou4 cey77bl c-4aoy6u c-tqu0hl" data_holder="product_full_price">139.98</span></div></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera c8n7oc c1kzpo2"><span class="c-n92bdn ckd1ou4 cybjsex">Offer Price:</span><div class="c-lc9846 c-oaxxat c-rri4mx cevei02 c7l9c6s c-a4oera c-lqt1o c-ykmh5z cybkfeg c-crbsvi c-aop3ja c-b1u9qq"><span class="c-n92bdn" data-holder="currency">$</span><span class="c-n92bdn c-lqt1o cybkfeg c-ykmh5z" data_holder="product_final_price">24.99</span></div></div></div><button class="c-lc9846 c-oaxxat cevei02 c-rri4mx cpf2v2a c-jaytv5 c-sc1q4l c-z1rj74 ccdkvsh cgt2htg cwzv3pd cey0ojg cmpdduo ch8wzy4 c-i9vfpo c-evftdq c7l9c6s c-4au6wl c-z3x91n c-mb6oog c8q8of" data-submit-button=""><span class="c-m9yni cey0ojg c-v947c4 cybkfeg">Complete My Order</span></button></div><div class="c-lc9846 c-oaxxat c-rri4mx cxpk1f6 c7l9c6s c-a4oera cnxk88f ccm3vtn"><span class="c-n92bdn c-yq8lw3 c-mdsko cybj5fe chlmbyd cyvf0zv" data-decline-button="">No thanks, I don´t want this great offer</span></div></div></div></div><script src="https://stdigitalmvmtdev001.blob.core.windows.net/libs/mvmt-latest.develop.js.min.js"></script><script src="scripts/downsell.js"></script><script src="scripts/pageBuilder/page/upsell/upsell.js"></script>
 <script type="application/json" id="page-config">
 {
   "campaignId": "39",
-  "pageType": "Upsell",
+  "pageType": "Downsell",
   "funnelId": "6a0b6cec7f4c8c35affcad7c",
   "locale": "US"
 }

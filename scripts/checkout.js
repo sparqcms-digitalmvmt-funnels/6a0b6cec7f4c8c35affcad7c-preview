@@ -667,7 +667,7 @@ async function createOrderViaWallet(confirmationToken, paymentMethodId) {
   const shippingProfileId = resolveProfileIdFromEl(document.querySelector(`[data-product-id="${selectedProduct.id}"]`), shipping?.address?.country);
 
   const orderData = {
-    pageId: "08JP_QNcbUS0_ORm6wgM5LoGwXevcticOJc4DI4DH6blrNsI28oGEc0gX6bc2_ch",
+    pageId: "8FgRQ_hNaSOGuuAj7tfK02d68kXrXrsORTDYXMK0WUPhL_Jf9U7uJjnoP7nAGgNZ",
     action: "process",
     campaign_id: CAMPAIGN_ID,
     connection_id: 1,
@@ -1481,7 +1481,7 @@ async function createOrderViaPaypal(isExpress = false) {
   const shippingProfileId = resolveProfileIdFromEl(document.querySelector(`[data-product-id="${selectedProduct.id}"]`), shippingCountry);
   const sameAddress = isSameAddress();
   const orderData = {
-    pageId: "08JP_QNcbUS0_ORm6wgM5LoGwXevcticOJc4DI4DH6blrNsI28oGEc0gX6bc2_ch",
+    pageId: "8FgRQ_hNaSOGuuAj7tfK02d68kXrXrsORTDYXMK0WUPhL_Jf9U7uJjnoP7nAGgNZ",
     action: "process",
     campaign_id: CAMPAIGN_ID,
     connection_id: 1, // VRIO URL ending /connection
@@ -1778,7 +1778,7 @@ async function createOrderViaKlarna() {
   const sameAddress = isSameAddress();
 
   const orderData = {
-    pageId: "08JP_QNcbUS0_ORm6wgM5LoGwXevcticOJc4DI4DH6blrNsI28oGEc0gX6bc2_ch",
+    pageId: "8FgRQ_hNaSOGuuAj7tfK02d68kXrXrsORTDYXMK0WUPhL_Jf9U7uJjnoP7nAGgNZ",
     campaign_id: CAMPAIGN_ID,
     connection_id: 1,
     email: email,
@@ -2158,7 +2158,7 @@ async function createOrderViaCreditCard() {
   let orderTotal = Math.max(0, Number(selectedProduct.price) * selectedProduct.quantity);
 
   const orderData = {
-    pageId: "08JP_QNcbUS0_ORm6wgM5LoGwXevcticOJc4DI4DH6blrNsI28oGEc0gX6bc2_ch",
+    pageId: "8FgRQ_hNaSOGuuAj7tfK02d68kXrXrsORTDYXMK0WUPhL_Jf9U7uJjnoP7nAGgNZ",
     action: "process",
     campaign_id: CAMPAIGN_ID,
     connection_id: 1, // VRIO URL ending /connection
@@ -4433,7 +4433,7 @@ async function returnPaypal() {
 ;
 
     const body = {
-        pageId: "08JP_QNcbUS0_ORm6wgM5LoGwXevcticOJc4DI4DH6blrNsI28oGEc0gX6bc2_ch",
+        pageId: "8FgRQ_hNaSOGuuAj7tfK02d68kXrXrsORTDYXMK0WUPhL_Jf9U7uJjnoP7nAGgNZ",
         action: "process",
         campaign_id: CAMPAIGN_ID,
         connection_id: 1,
@@ -4866,6 +4866,52 @@ function handleFreeGiftParam(allProducts) {
       return parseFloat(price.replace(",", ".").replace(/[^0-9.-]+/g, ''));
     }
 
+    function normalizeCurrencyAmount(amount) {
+      const numericAmount = Number(amount);
+      if (!Number.isFinite(numericAmount)) return 0;
+      const cents = numericAmount * 100;
+      const truncatedCents = cents < 0 ? Math.ceil(cents) : Math.floor(cents);
+      return truncatedCents / 100;
+    }
+
+    function amountToCents(amount) {
+      return Math.trunc(normalizeCurrencyAmount(amount) * 100);
+    }
+
+    function centsToAmount(cents) {
+      return normalizeCurrencyAmount(Number(cents || 0) / 100);
+    }
+
+    function safeRoundDiscountedCents(rawDiscountedCents) {
+      const floored = Math.floor(rawDiscountedCents);
+      const rounded = Math.round(rawDiscountedCents);
+
+      // Keep .99 endings from being pushed to the next whole dollar (39.99 -> 40.00).
+      if (rounded % 100 === 0 && floored % 100 === 99) {
+        return floored;
+      }
+
+      return rounded;
+    }
+
+    function getDiscountedUnitPrice(unitPrice, discountPercent) {
+      const unitPriceInCents = amountToCents(unitPrice);
+      const rawDiscountedCents =
+        (unitPriceInCents * (100 - discountPercent)) / 100;
+      const discountedCents = safeRoundDiscountedCents(rawDiscountedCents);
+      return centsToAmount(discountedCents);
+    }
+
+    function getTenBucksOffUnitPrice(unitPrice, quantity) {
+      const safeQuantity = Math.max(1, Number(quantity) || 1);
+      const totalInCents = amountToCents(unitPrice) * safeQuantity;
+      const discountedTotalInCents = Math.max(0, totalInCents - 1000);
+      const unitPriceInCents = Math.floor(
+        discountedTotalInCents / safeQuantity,
+      );
+      return centsToAmount(unitPriceInCents);
+    }
+
     let currentProduct;
     const productsElements = document.querySelectorAll('[data-products] [data-product-id]:not([data-bundled-upsell])');
     const activeProduct = document.querySelector('[data-products] .product-card-active');
@@ -4923,11 +4969,14 @@ function handleFreeGiftParam(allProducts) {
       priceElements.forEach((productPriceEl, index) => {
         if (isTenBucksDiscount) {
           const qty = parseInt(productsElements[index].getAttribute('data-product-quantity'));
-          const price = (unitPrices[index] * qty - 10) / qty;
+          const price = getTenBucksOffUnitPrice(unitPrices[index], qty);
           unitPrices[index] = price;
           updatePriceElement(productPriceEl, price);
         } else {
-          const price = unitPrices[index] - (unitPrices[index] * discountPercent) / 100;
+          const price = getDiscountedUnitPrice(
+            unitPrices[index],
+            discountPercent,
+          );
           unitPrices[index] = price;
           updatePriceElement(productPriceEl, price);
         }
@@ -4935,11 +4984,15 @@ function handleFreeGiftParam(allProducts) {
 
       if (currentProduct) {
         if (isTenBucksDiscount) {
-          currentProduct.price =
-            (currentProduct.price * currentProduct.quantity - 10) / currentProduct.quantity;
+          currentProduct.price = getTenBucksOffUnitPrice(
+            currentProduct.price,
+            currentProduct.quantity,
+          );
         } else {
-          currentProduct.price =
-            currentProduct.price - (currentProduct.price * discountPercent) / 100;
+          currentProduct.price = getDiscountedUnitPrice(
+            currentProduct.price,
+            discountPercent,
+          );
         }
       }
 
@@ -4983,16 +5036,18 @@ function handleFreeGiftParam(allProducts) {
       };
 
       const shouldSkipRecurring = isKlarnaPaymentSelected();
-      let total = 0;
-      let subTotal = 0;
-      let discount = 0;
+      let totalInCents = 0;
+      let subTotalInCents = 0;
+      let discountInCents = 0;
       summaryList.innerHTML = '';
       summaryList.style.display = 'flex';
       summaryList.style.flexDirection = 'column';
       summaryList.style.gap = '10px';
       summaryList.style.width = '100%';
       let hasItems = false;
-      const currentUnitPrice = Number(currentProduct?.price || 0);
+      const currentUnitPrice = normalizeCurrencyAmount(
+        currentProduct?.price || 0,
+      );
 
       if (currentProduct) {
         if (shouldSkipRecurring && isRecurringByProductId(currentProduct.id)) {
@@ -5040,9 +5095,12 @@ function handleFreeGiftParam(allProducts) {
         itemContainer.appendChild(priceElement);
         if (summaryList) summaryList.appendChild(itemContainer);
 
-        total += currentUnitPrice * quantity;
-        subTotal += fullPriceElement;
-        discount += fullPriceElement - currentUnitPrice * quantity;
+        const unitCents = amountToCents(currentUnitPrice);
+        const totalCents = unitCents * quantity;
+        const fullCents = amountToCents(fullPriceElement);
+        totalInCents += totalCents;
+        subTotalInCents += fullCents;
+        discountInCents += fullCents - totalCents;
         }
       } else {
         console.log('--> No selected product found');
@@ -5148,7 +5206,10 @@ function handleFreeGiftParam(allProducts) {
           itemContainer.appendChild(itemDetails);
           itemContainer.appendChild(priceElement);
           if (summaryList) summaryList.appendChild(itemContainer);
-          subTotal += isGift ? 0 : product.finalPrice * productObject.quantity;
+          if (!isGift) {
+            subTotalInCents +=
+              amountToCents(product.finalPrice) * productObject.quantity;
+          }
         }
       });
       if (!hasItems && summaryList) {
@@ -5162,21 +5223,27 @@ function handleFreeGiftParam(allProducts) {
 
       const dataSumSubTotal = document.querySelector('[data-summary-subtotal]');
       if (dataSumSubTotal) {
-        dataSumSubTotal.textContent = formatPrice(subTotal);
+        dataSumSubTotal.textContent = formatPrice(
+          centsToAmount(subTotalInCents)
+        );
       }
 
-      const finalTotal = subTotal - discount;
+      const finalTotalInCents = subTotalInCents - discountInCents;
 
       const discountAmountElement = document.querySelector(
         '[data-summary-product-discount-amount]',
       );
       if (discountAmountElement) {
-        discountAmountElement.textContent = formatPrice(discount);
+        discountAmountElement.textContent = formatPrice(
+          centsToAmount(discountInCents)
+        );
       }
 
       const finalPriceElements = document.querySelectorAll('[data-summary-product-final-price]');
       finalPriceElements.forEach((finalPriceElement) => {
-        finalPriceElement.textContent = formatPrice(finalTotal);
+        finalPriceElement.textContent = formatPrice(
+          centsToAmount(finalTotalInCents)
+        );
       });
     }
     updateSummary();

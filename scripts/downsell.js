@@ -184,7 +184,7 @@ function formatDateByConvention(year, month, day) {
 const PAYMENT_METHODS_IDS = {"creditCard":1,"googlePay":3,"applePay":4,"paypal":6,"klarna":12};
 const CAMPAIGN_ID = vrioCampaignId;
 const INTEGRATION_ID = integrationId;
-const UPSELL_NEXT_PAGE_SLUG = "downsell";
+const UPSELL_NEXT_PAGE_SLUG = "thankyou";
 
 function getNextPageSlugForRedirect() {
   const normalize = (value) => {
@@ -194,7 +194,7 @@ function getNextPageSlugForRedirect() {
   if (UPSELL_NEXT_PAGE_SLUG) return normalize(UPSELL_NEXT_PAGE_SLUG);
   return "/";
 }
-const HAS_FOLLOWING_UPSELLS = true;
+const HAS_FOLLOWING_UPSELLS = false;
 const UPSELL_WALLETS_CONFIG = {"enabled":false,"enableApplePay":false,"enableGooglePay":false,"enableKlarna":false};
 const isKlarnaSelected = ({ walletsConfig } = {}) => {
   if (walletsConfig && typeof walletsConfig === "object") {
@@ -567,8 +567,8 @@ function showErrorAndRedirect(msg, redirectTarget = "checkout") {
 const runDeclineFlow = async ({ isAutoSkip = false } = {}) => {
   if (!isAutoSkip) {
    MVMT.track("CTA_CLICK", {
-    page: "upsell2",
-    page_type: "Upsell",
+    page: "downsell",
+    page_type: "Downsell",
     page_url: window.location.href
   });
   }
@@ -581,6 +581,257 @@ const runDeclineFlow = async ({ isAutoSkip = false } = {}) => {
   window.location.href = getNextPageSlugForRedirect();
 };
 
+
+const extractKlarnaLivemode = (gatewayResponseText) => {
+  try {
+    const gatewayData = JSON.parse(gatewayResponseText);
+    const entry = Array.isArray(gatewayData) ? gatewayData[0] : gatewayData;
+    if (entry && entry.livemode !== undefined) return entry.livemode;
+  } catch (error) {
+    console.error("Error extracting Klarna livemode", error);
+  }
+  return undefined;
+}
+const processAndRedirectToKlarna = async (orderId, redirectUrl) => {
+  if (isTest) console.log("Klarna: processing order", orderId);
+
+  const orderData = JSON.parse(sessionStorage.getItem("orderData") || "null") || {};
+  const merchantId = orderData?.merchant_id ?? orderData?.merchantId ?? null;
+  const finalRedirectUrl = redirectUrl || window.location.href;
+
+  const processResponse = await fetch(
+    `https://app-cms-api-proxy-dev-001.azurewebsites.net/vrio/orders/${orderId}/process`,
+    {
+      method: "POST",
+      headers: {
+        authorization: `appkey ${INTEGRATION_ID}`,
+        "Content-Type": "application/json; charset=utf-8"
+      },
+      body: JSON.stringify({
+        redirect_url: finalRedirectUrl,
+        payment_method_id: 12,
+        ...(merchantId ? { merchant_id: merchantId } : {})
+      })
+    }
+  );
+
+  const processResult = await processResponse.json();
+
+  if (isTest) console.log("Klarna process response:", processResult);
+
+  if (
+    !processResponse.ok ||
+    (processResult && processResult.error) ||
+    !processResult.post_data
+  ) {
+    const code = processResult?.error?.code || processResult?.code || null;
+    const msg =
+      (processResult && processResult.error && processResult.error.message) ||
+      (processResult && processResult.message) ||
+      i18n.errors.systemErrorGeneric;
+    const error = new Error(msg);
+    error.code = code;
+    if (processResult?.error) {
+      error.error = processResult.error;
+    }
+    throw error;
+  }
+
+  const livemode = extractKlarnaLivemode(processResult.gateway_response_text);
+  if (livemode !== undefined) {
+    sessionStorage.setItem("klarna_livemode", JSON.stringify(livemode));
+  }
+
+  window.location.href = processResult.post_data;
+}
+async function returnKlarna() {
+  const params = getParams();
+  const paymentIntent = params.get("payment_intent");
+  const orderId = sessionStorage.getItem("cms_oid");
+
+  if (!paymentIntent) return;
+
+  const preload = document.querySelector("[data-preloader]");
+  if (preload) preload.style.display = "flex";
+
+  if (!orderId) {
+    console.error("Klarna return: no order ID found in sessionStorage");
+    if (preload) preload.style.display = "none";
+    showError(i18n.errors.orderNotFound);
+    return;
+  }
+
+  const orderData = JSON.parse(sessionStorage.getItem("orderData") || "null") || {};
+  const merchantId = orderData?.merchant_id ?? orderData?.merchantId ?? null;
+
+  try {
+    const response = await fetch(
+      `https://app-cms-api-proxy-dev-001.azurewebsites.net/vrio/orders/${orderId}/complete`,
+      {
+        method: "POST",
+        headers: {
+          authorization: `appkey ${INTEGRATION_ID}`,
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        body: JSON.stringify({
+          transaction_token: paymentIntent,
+          ...(merchantId ? { merchant_id: merchantId } : {})
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (isTest && window.location.hostname === "localhost") {
+      console.log("Klarna complete response:", result);
+    }
+
+    let isLive = extractKlarnaLivemode(result.gateway_response_text);
+    if (isLive === undefined) {
+      const stored = sessionStorage.getItem("klarna_livemode");
+      isLive = stored !== null ? JSON.parse(stored) : true;
+    }
+
+    const resultOrderId = result.order_id || orderId;
+
+    if (result.success) {
+      if (isLive === false) await flagOrderAsTest(resultOrderId);
+
+      sessionStorage.removeItem("cart_token");
+      sessionStorage.removeItem("klarna_livemode");
+      sessionStorage.setItem("cms_oid", resultOrderId);
+      sessionStorage.setItem("orderids", JSON.stringify([resultOrderId]));
+      MVMT.track("ORDER_SUCCESS", {
+        page: "downsell",
+        page_type: "Downsell",
+        page_url: window.location.href,
+        order_data: orderData,
+        response: result,
+      });
+      try {
+        sendTransactionToDataLayer(vrioToTransaction(result), "Klarna");
+      } catch (e) {
+        console.warn("Klarna: could not send transaction to data layer", e);
+      }
+      try {
+        if (typeof validateAndSendToKlaviyo === "function") {
+          const klaviyoPostOrderData = {
+            ...orderData,
+            vrio_order_id: resultOrderId,
+            vrio_response_status: "success",
+          };
+          await validateAndSendToKlaviyo(
+            klaviyoPostOrderData,
+            "Order Success - VRIO Confirmation",
+            "order"
+          );
+        }
+      } catch (error) {
+        console.error("Error sending transaction to data layer", error);
+      }
+      try {
+        if (typeof sendKlaviyoOrderEvents === 'function') {
+          await sendKlaviyoOrderEvents(orderData, result, true);
+        }
+      } catch (error) {
+        console.error("Error sending order events to Klaviyo", error);
+      }
+      const redirectSlug =
+        typeof nextPageSlug === "string" && nextPageSlug.length > 0
+          ? nextPageSlug.startsWith("/")
+            ? nextPageSlug
+            : "/" + nextPageSlug
+          : "/";
+      window.location.href = redirectSlug;
+    } else {
+      if (!isLive) await flagOrderAsTest(resultOrderId);
+
+      if (isTest) console.error("Klarna complete error:", result);
+      const msg =
+        (result && result.error && result.error.message) ||
+        (result && result.message) ||
+        i18n.errors.klarnaCompletionFailed;
+      if (window.MVMT) {
+        MVMT.track("ORDER_ERROR", {
+          page: "downsell",
+          page_type: "Downsell",
+          page_url: window.location.href,
+          order_data: orderData,
+          response: result,
+        });
+      }
+      if (preload) preload.style.display = "none";
+      showError(msg);
+    }
+  } catch (error) {
+    if (isTest) console.error("Klarna complete error:", error);
+    const storedLive = sessionStorage.getItem("klarna_livemode");
+    if (storedLive !== null && JSON.parse(storedLive) === false) {
+      await flagOrderAsTest(orderId);
+    }
+    if (window.MVMT) {
+      MVMT.track("ORDER_ERROR", {
+        page: "downsell",
+        page_type: "Downsell",
+        page_url: window.location.href,
+        order_data: orderData,
+        error: error.message || error,
+      });
+    }
+    if (preload) preload.style.display = "none";
+    showError(i18n.errors.unexpectedError);
+  }
+}
+
+const declineKlarnaUpsell = async () => {
+  if (!isKlarnaPayment) {
+    showErrorAndRedirect(
+      i18n.errors.klarnaNotAvailable,
+      "checkout"
+    );
+    return;
+  }
+  setUpsellButtonsDisabled(true);
+
+  const preload = document.querySelector("[data-preloader]");
+    if (preload) preload.style.display = "flex";
+  const errorEl = document.querySelector("[data-general-error]");
+  if (errorEl) {
+    errorEl.style.display = "none";
+    errorEl.innerText = "";
+  }
+  try {
+    const lastOrderId = sessionStorage.getItem("cms_oid");
+    if (!lastOrderId) {
+      throw new Error("No order ID found in session");
+    }
+
+    if (isTest)
+      console.log(
+        "Klarna: declining upsell, processing order without new offers",
+        lastOrderId
+      );
+
+    await processAndRedirectToKlarna(lastOrderId, removeKlarnaParamsFromUrl());
+  } catch (error) {
+    console.error(error);
+    if (isOrderAlreadyCompletedError(error)) {
+      showErrorAndRedirect(
+        error?.message ||
+          i18n.errors.orderAlreadyCompleteRedirect,
+        "nextPage"
+      );
+      return;
+    }
+    showErrorAndRedirect(
+      error.message || i18n.errors.unexpectedError,
+      "checkout"
+    );
+  } finally {
+    if (preload) preload.style.display = "none";
+    setUpsellButtonsDisabled(false);
+  }
+};
 
 
 const processKlarnaUpsell = async () => {
@@ -661,15 +912,15 @@ const processKlarnaUpsell = async () => {
       });
 
     MVMT.track("UPSELL_SUBMITTED", {
-      page: "upsell2",
-      page_type: "Upsell",
+      page: "downsell",
+      page_type: "Downsell",
       page_url: window.location.href,
       order_id: lastOrderId,
       offers
     });
     MVMT.track("CTA_CLICK", {
-      page: "upsell2",
-      page_type: "Upsell",
+      page: "downsell",
+      page_type: "Downsell",
       page_url: window.location.href
     });
 
@@ -685,7 +936,7 @@ const processKlarnaUpsell = async () => {
         body: JSON.stringify({
           offers: offers.map((o) => JSON.stringify(o)),
           order_id: lastOrderId,
-          pageId: "L5cIdjUOcjcMHMu3fB_TbAfhzql5a1mArH3tk4Z6Q2pQ2OcCY-821BYIxfTAGESW"
+          pageId: "Px9GrGO_MEWMH12Cr4W4Cyn9HzkbqtQOxPtZ--8a3xQQqvDgngU_-9yxH3g5jc3s"
         })
       }
     );
@@ -765,7 +1016,7 @@ const processUpsell = async () => {
   }
   try {
     const orderData = JSON.parse(sessionStorage.getItem("orderData"));
-    orderData.pageId = "L5cIdjUOcjcMHMu3fB_TbAfhzql5a1mArH3tk4Z6Q2pQ2OcCY-821BYIxfTAGESW";
+    orderData.pageId = "Px9GrGO_MEWMH12Cr4W4Cyn9HzkbqtQOxPtZ--8a3xQQqvDgngU_-9yxH3g5jc3s";
     const lastOrderId = sessionStorage.getItem("cms_oid");
     const stripePayment = JSON.parse(sessionStorage.getItem("stripePayment"));
     const isStripeTestOrder = stripePayment && !stripePayment.isLive;
@@ -832,8 +1083,8 @@ const processUpsell = async () => {
 
     if (isTest) console.log("Sending upsell to VRIO", orderData);
     MVMT.track("UPSELL_SUBMITTED", {
-      page: "upsell2",
-      page_type: "Upsell",
+      page: "downsell",
+      page_type: "Downsell",
       page_url: window.location.href,
       order_data: orderData,
     });
@@ -871,8 +1122,8 @@ const processUpsell = async () => {
       }
       if (window.MVMT) {
         MVMT.track("UPSELL_ERROR", {
-          page: "upsell2",
-          page_type: "Upsell",
+          page: "downsell",
+          page_type: "Downsell",
           page_url: window.location.href,
           order_data: orderData
         });
@@ -895,8 +1146,8 @@ const processUpsell = async () => {
         showToast(msg);
       }
       MVMT.track("UPSELL_ERROR", {
-        page: "upsell2",
-        page_type: "Upsell",
+        page: "downsell",
+        page_type: "Downsell",
         page_url: window.location.href,
         order_data: orderData,
       });
@@ -904,14 +1155,14 @@ const processUpsell = async () => {
     }
 
     MVMT.track("UPSELL_SUCCESS", {
-      page: "upsell2",
-      page_type: "Upsell",
+      page: "downsell",
+      page_type: "Downsell",
       page_url: window.location.href,
       order_data: orderData,
     });
     MVMT.track("CTA_CLICK", {
-      page: "upsell2",
-      page_type: "Upsell",
+      page: "downsell",
+      page_type: "Downsell",
       page_url: window.location.href,
     });
 
@@ -1050,7 +1301,7 @@ if (typeof validateAndSendToKlaviyo === "function") {
       message: "Klaviyo lifecycle: page ready",
       runId: "initial",
       hypothesisId: "KlaviyoLifecycle",
-      data: { pageName: "upsell2", pageType: "Upsell" },
+      data: { pageName: "downsell", pageType: "Downsell" },
     };
     if (klaviyoDebugEnabled && typeof console !== "undefined" && console.log) {
       console.log("[Klaviyo lifecycle] page_ready " + JSON.stringify(pageReadyPayload.data));
@@ -1065,6 +1316,14 @@ if (typeof validateAndSendToKlaviyo === "function") {
     screen.style.display = "flex";
   }
   
+  if (isKlarnaPayment) {
+    setUpsellButtonsDisabled(true);
+    try {
+      await returnKlarna();
+    } finally {
+      setUpsellButtonsDisabled(false);
+    }
+  }
   applyKlarnaVisibility();
 
   if (shouldAutoSkip && !isKlarnaReturnFlow) {
@@ -1142,7 +1401,7 @@ const sendTransactionToDataLayer = (response, paymentOption) => {
     offer: offerName,
     customer_id: details.customerId.toString(),
     page: {
-      type: "Upsell",
+      type: "Downsell",
       isReload: performance.getEntriesByType('navigation')[0].type === 'reload',
       isExclude: false,
     },
@@ -1156,7 +1415,7 @@ const sendTransactionToDataLayer = (response, paymentOption) => {
       total: parseFloat(details.total),
       grandTotal: parseFloat(details.grandTotal),
       count: 1,
-      step: "Upsell",
+      step: "Downsell",
       isTestOrder: isTest || details.isTestOrder,
       product: details.line_items
         .reduce((acc, curr) => {
